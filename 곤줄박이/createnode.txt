@@ -1,0 +1,120 @@
+#include <iostream>
+using namespace std;
+
+typedef int T;
+
+typedef struct node {
+	T data;
+	struct node* next;
+}Node;
+
+Node* createNode(T data)
+{
+	Node* node = new Node;
+	node->data = data;
+	node->next = nullptr;
+	return node;
+}
+
+Node* createList()
+{
+	Node* a = createNode(2);
+	Node* b = createNode(1);
+	Node* c = createNode(3);
+	Node* d = createNode(4);
+
+	a->next = b;
+	b->next = c;
+	c->next = d;
+	d->next = nullptr;
+
+	return a;
+}
+
+void showList(Node* head)
+{
+	if (!head) return;
+
+	Node *p = head;
+	while (p) {
+		printf("%d ", p->data);
+		p = p->next;
+	}
+	printf("\n");
+}
+
+Node* findPrev(Node* head, Node* node)
+{
+	if(!head||!node) return nullptr;
+	Node* p = head;
+	if(p==node) return p;
+	while (p)
+	{
+		if(p->next==node) return p;
+		p=p->next;
+	}
+	return nullptr;
+}
+
+Node* findBack(Node* head)
+{
+	if(!head) return nullptr;
+	Node* p = head;
+	while (p)
+	{
+		if(p->next==nullptr) return p;
+		p=p->next;
+	}
+	return nullptr;
+}
+
+void push_front(Node*& head, T data)
+{
+	Node* node = createNode(data);
+	node->next = head;
+	head = node;
+}
+
+void push_back(Node*& head, T data)
+{
+	Node* node = createNode(data);
+	if (findBack(head) == nullptr)
+	{
+		head = node;
+	}
+	findBack(head)->next = node;
+}
+
+void pop_front(Node*& head)
+{
+	if(!head) return;
+	Node* front = findPrev(head, head->next);
+	head = head->next;
+	if(front){delete front;}
+}
+
+void pop_back(Node*& head)
+{
+	if(!head) return;
+	Node* back = findBack(head);
+	if(!back) return;
+	if(back)
+	{
+		if(findPrev(head, back)==back)
+			head=nullptr;
+		else
+			findPrev(head, back)->next = nullptr;
+		delete back;
+	}
+}
+
+int main(void)
+{
+	Node* head = createList();
+	showList(head);
+	push_front(head, 6);
+	showList(head);
+	push_back(head, 7);
+	showList(head);
+	return 0;
+}
